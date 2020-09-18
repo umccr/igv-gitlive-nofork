@@ -123,6 +123,9 @@ public class LoadFromURLMenuAction extends MenuAction {
 
                             rl.setIndexPath(indexUrl);
                         }
+                        if (url.contains("htsnexus.rnd.dnanex.us/v1/reads")) {
+                            rl.setAttribute("htsget", true);
+                        }
                         igv.loadTracks(Arrays.asList(rl));
 
                     }
