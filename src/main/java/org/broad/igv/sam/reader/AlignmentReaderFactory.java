@@ -25,10 +25,7 @@
 
 package org.broad.igv.sam.reader;
 
-import htsjdk.samtools.SAMFileHeader;
-import htsjdk.samtools.SAMReadGroupRecord;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.ValidationStringency;
+import htsjdk.samtools.*;
 import org.apache.log4j.Logger;
 import org.broad.igv.exceptions.DataLoadException;
 import org.broad.igv.google.Ga4ghAlignmentReader;
@@ -85,7 +82,11 @@ public class AlignmentReaderFactory {
             reader = new GeraldReader(samFile, requireIndex);
         } else if (typeString.endsWith(".bam") || (typeString.endsWith(".cram"))) {
             try {
-                reader = new BAMReader(locator, requireIndex); //, requireIndex);
+                if ((Boolean) locator.getAttribute("htsget")) {
+                    reader = new HtsgetBAMReader(locator, requireIndex);
+                } else {
+                    reader = new BAMReader(locator, requireIndex); //, requireIndex);
+                }
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 throw new DataLoadException("Error loading BAM file: " + e.toString(), locator.getPath());

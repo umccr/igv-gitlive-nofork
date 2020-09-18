@@ -10,7 +10,6 @@ import htsjdk.samtools.util.htsget.HtsgetRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-
 public class Htsget {
     private static Logger log = Logger.getLogger(Htsget.class);
 
