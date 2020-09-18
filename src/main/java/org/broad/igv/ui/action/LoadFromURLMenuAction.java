@@ -123,7 +123,7 @@ public class LoadFromURLMenuAction extends MenuAction {
 
                             rl.setIndexPath(indexUrl);
                         }
-                        if (url.contains("htsnexus.rnd.dnanex.us/v1/reads")) {
+                        if (isHtsGet(url)) {
                             rl.setAttribute("htsget", true);
                         }
                         igv.loadTracks(Arrays.asList(rl));
@@ -152,6 +152,13 @@ public class LoadFromURLMenuAction extends MenuAction {
                 }
             }
         }
+    }
+
+    private boolean isHtsGet(String url) {
+        return  url.contains("htsnexus.rnd.dnanex.us/v1/reads") ||
+                url.contains("htsget.wtsi-npg-test.co.uk") ||
+                url.contains("/reads/") ||
+                url.contains("htsget.ga4gh.org");
     }
 
     private String mapURL(String url) {
