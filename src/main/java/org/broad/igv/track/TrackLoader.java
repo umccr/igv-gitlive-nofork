@@ -29,6 +29,7 @@ import htsjdk.tribble.AsciiFeatureCodec;
 import htsjdk.tribble.Feature;
 import htsjdk.variant.vcf.VCFHeader;
 import org.apache.log4j.Logger;
+import org.broad.igv.aws.EventBridgeForwarder;
 import org.broad.igv.bbfile.BBFileReader;
 import org.broad.igv.bigwig.BigWigDataSource;
 import org.broad.igv.blast.BlastMapping;
@@ -38,6 +39,7 @@ import org.broad.igv.data.cufflinks.*;
 import org.broad.igv.data.expression.ExpressionDataset;
 import org.broad.igv.data.expression.ExpressionFileParser;
 import org.broad.igv.data.seg.*;
+import org.broad.igv.event.IGVEventBus;
 import org.broad.igv.exceptions.DataLoadException;
 import org.broad.igv.feature.BasePairFileUtils;
 import org.broad.igv.feature.GisticFileParser;
@@ -117,6 +119,7 @@ public class TrackLoader {
         // Check if the AWS credentials are still valid. If not, re-login and renew pre-signed urls
         if (AmazonUtils.isAwsS3Path(path)) {
             AmazonUtils.checkLogin();
+            EventBridgeForwarder.getInstance().receiveEvent(path);
         }
 
         log.info("Loading resource, path " + path);
