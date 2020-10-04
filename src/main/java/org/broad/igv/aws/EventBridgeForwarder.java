@@ -8,7 +8,6 @@ import software.amazon.awssdk.services.eventbridge.EventBridgeClient;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsRequest;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsRequestEntry;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsResponse;
-import software.amazon.awssdk.services.eventbridge.model.PutEventsResultEntry;
 import software.amazon.awssdk.services.sts.model.Credentials;
 
 import java.util.ArrayList;
@@ -23,14 +22,7 @@ public class EventBridgeForwarder implements IGVEventObserver {
     };
 
     private EventBridgeForwarder() {
-        Credentials credentials = AmazonUtils.GetCognitoAWSCredentials();
-        AwsSessionCredentials creds = AwsSessionCredentials.create(credentials.accessKeyId(),
-                credentials.secretAccessKey(),
-                credentials.sessionToken());
-
-        StaticCredentialsProvider credsProvider = StaticCredentialsProvider.create(creds);
-
-        eventBridgeClient = EventBridgeClient.builder().credentialsProvider(credsProvider).build();
+        eventBridgeClient = AmazonUtils.updateClientBuilder(EventBridgeClient.builder()).build();
     };
 
     @Override

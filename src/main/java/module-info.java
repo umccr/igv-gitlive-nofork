@@ -45,4 +45,5 @@ module org.igv {
     requires software.amazon.awssdk.protocols.json;
     requires software.amazon.awssdk.services.eventbridge;
     requires com.fasterxml.jackson.core;
+    requires software.amazon.awssdk.awscore;
 }
