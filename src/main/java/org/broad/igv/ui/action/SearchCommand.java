@@ -32,6 +32,7 @@ import htsjdk.tribble.Feature;
 import org.apache.log4j.Logger;
 import org.broad.igv.Globals;
 import org.broad.igv.annotations.ForTesting;
+import org.broad.igv.aws.EventBridgeForwarder;
 import org.broad.igv.feature.*;
 import org.broad.igv.feature.genome.Genome;
 import org.broad.igv.feature.genome.GenomeManager;
@@ -122,8 +123,13 @@ public class SearchCommand {
 
 
     public void execute() {
+        fireAwsEvent();
         List<SearchResult> results = runSearch(searchString);
         showSearchResult(results);
+    }
+
+    private void fireAwsEvent() {
+        EventBridgeForwarder.getInstance().receiveEvent(this.searchString, "SearchEvent");
     }
 
     /**

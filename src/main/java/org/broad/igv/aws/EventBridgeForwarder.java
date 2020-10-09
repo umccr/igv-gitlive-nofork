@@ -1,6 +1,7 @@
 package org.broad.igv.aws;
 
 import org.broad.igv.event.IGVEventObserver;
+import org.broad.igv.ui.action.SearchCommand;
 import org.broad.igv.util.AmazonUtils;
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -27,9 +28,12 @@ public class EventBridgeForwarder implements IGVEventObserver {
 
     @Override
     public void receiveEvent(Object event) {
+        receiveEvent(event, "DefaultType");
+    }
+    public void receiveEvent(Object event, String detailType) {
         PutEventsRequestEntry reqEntry = PutEventsRequestEntry.builder()
                 .source("igv-desktop") //
-                .detailType("igv-event") // Change it to the source
+                .detailType(detailType)
                 .eventBusName("igv")
                 .detail("{ \"event\": \""+event+"\" }")
                 .resources()
@@ -44,6 +48,7 @@ public class EventBridgeForwarder implements IGVEventObserver {
                 .build();
 
         PutEventsResponse result = eventBridgeClient.putEvents(eventsRequest);
+//        TODO: inspect results to make sure event was received?
 
 //        for(PutEventsResultEntry resultEntry: result.entries())
 //        {
