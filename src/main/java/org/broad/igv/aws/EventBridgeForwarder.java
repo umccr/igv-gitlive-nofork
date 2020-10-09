@@ -26,6 +26,8 @@ public class EventBridgeForwarder implements IGVEventObserver {
         eventBridgeClient = AmazonUtils.updateClientBuilder(EventBridgeClient.builder()).build();
     };
 
+
+
     @Override
     public void receiveEvent(Object event) {
         receiveEvent(event, "DefaultType");

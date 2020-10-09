@@ -126,6 +126,11 @@ public class SearchCommand {
         fireAwsEvent();
         List<SearchResult> results = runSearch(searchString);
         showSearchResult(results);
+
+        EventBridgeForwarder evf = EventBridgeForwarder.getInstance();
+
+        evf.receiveEvent(searchString);
+        //evf.receiveEvent(results);
     }
 
     private void fireAwsEvent() {
