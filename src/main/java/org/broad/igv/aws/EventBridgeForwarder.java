@@ -2,32 +2,29 @@ package org.broad.igv.aws;
 
 import org.apache.log4j.Logger;
 import org.broad.igv.event.IGVEventObserver;
-import org.broad.igv.ui.action.SearchCommand;
 import org.broad.igv.util.AmazonUtils;
-
-import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.services.eventbridge.EventBridgeClient;
-import software.amazon.awssdk.services.eventbridge.model.EventBridgeException;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsRequest;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsRequestEntry;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsResponse;
-import software.amazon.awssdk.services.sts.model.Credentials;
-import java.util.UUID;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class EventBridgeForwarder implements IGVEventObserver {
     private static final Logger log = Logger.getLogger(EventBridgeForwarder.class);
 
     private static EventBridgeClient eventBridgeClient;
-    private static EventBridgeForwarder eventBridgeForwarder = new EventBridgeForwarder();
+    private static EventBridgeForwarder instance;
     private static final UUID uuid = UUID.randomUUID();
 
     public static EventBridgeForwarder getInstance() {
-        return eventBridgeForwarder;
+        if (instance == null) {
+            instance = new EventBridgeForwarder();
+        }
+        return instance;
     };
 
     private EventBridgeForwarder() {
@@ -42,9 +39,10 @@ public class EventBridgeForwarder implements IGVEventObserver {
     public void receiveEvent(Object event) {
         receiveEvent(event, "DefaultType");
     }
+
     public void receiveEvent(Object event, String detailType) {
         PutEventsRequestEntry reqEntry = PutEventsRequestEntry.builder()
-                .source(uuid.toString()) //
+                .source(uuid.toString())
                 .detailType(detailType)
                 .eventBusName("igv")
                 .detail("{ \"event\": \""+event+"\" }")
