@@ -449,6 +449,10 @@ public class AmazonUtils {
         return (path.startsWith("s3://"));
     }
 
+    public static boolean isLoggedin() {
+        return OAuthUtils.getInstance().getProvider("Amazon").isLoggedIn();
+    }
+
     public static void checkLogin() {
         if (!OAuthUtils.getInstance().getProvider("Amazon").isLoggedIn()) {
             OAuthUtils.getInstance().getProvider("Amazon").doSecureLogin();

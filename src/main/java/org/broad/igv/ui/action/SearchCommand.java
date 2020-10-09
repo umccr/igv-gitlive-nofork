@@ -44,6 +44,7 @@ import org.broad.igv.ui.panel.FrameManager;
 import org.broad.igv.ui.panel.ReferenceFrame;
 import org.broad.igv.ui.util.IGVMouseInputAdapter;
 import org.broad.igv.ui.util.MessageUtils;
+import org.broad.igv.util.AmazonUtils;
 import org.broad.igv.util.HttpUtils;
 
 import javax.swing.*;
@@ -134,7 +135,12 @@ public class SearchCommand {
     }
 
     private void fireAwsEvent() {
-        EventBridgeForwarder.getInstance().receiveEvent(this.searchString, "SearchEvent");
+        if (AmazonUtils.isLoggedin()) {
+            EventBridgeForwarder.getInstance().receiveEvent("logout", "login");
+            EventBridgeForwarder.getInstance().receiveEvent(this.searchString, "SearchEvent");
+        } else {
+            log.debug("Not logged in to AWS, events will not be sent to AWS EventBridge");
+        }
     }
 
     /**

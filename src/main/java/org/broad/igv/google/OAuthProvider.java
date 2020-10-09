@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import org.apache.log4j.Logger;
 import org.broad.igv.Globals;
+import org.broad.igv.aws.EventBridgeForwarder;
 import org.broad.igv.batch.CommandListener;
 import org.broad.igv.event.IGVEventBus;
 import org.broad.igv.prefs.PreferencesManager;
@@ -387,6 +388,11 @@ public class OAuthProvider {
         expirationTime = -1;
         currentUserName = null;
         removeRefreshToken();
+
+        if (AmazonUtils.isLoggedin()) {
+            // TODO: Get Cognito user id and pass it as event payload
+            EventBridgeForwarder.getInstance().receiveEvent("logout", "login");
+        }
     }
 
     private void removeRefreshToken() {

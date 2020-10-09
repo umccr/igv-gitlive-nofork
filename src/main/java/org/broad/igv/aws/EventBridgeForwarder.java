@@ -36,7 +36,7 @@ public class EventBridgeForwarder implements IGVEventObserver {
     }
     public void receiveEvent(Object event, String detailType) {
         PutEventsRequestEntry reqEntry = PutEventsRequestEntry.builder()
-                .source(uuid) //
+                .source(uuid.toString()) //
                 .detailType(detailType)
                 .eventBusName("igv")
                 .detail("{ \"event\": \""+event+"\" }")
