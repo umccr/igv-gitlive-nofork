@@ -202,7 +202,7 @@ public class IGVSessionReader implements SessionReader {
         }
 
         if (AmazonUtils.isLoggedin()) {
-            EventBridgeForwarder.getInstance().receiveEvent(document.toString(), "session");
+            EventBridgeForwarder.getInstance().receiveEvent(nodes.item(0).getTextContent(), "session");
         }
     }
 

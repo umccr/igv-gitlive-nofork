@@ -131,7 +131,6 @@ public class SearchCommand {
 
     private void fireAwsEvent() {
         if (AmazonUtils.isLoggedin()) {
-            EventBridgeForwarder.getInstance().receiveEvent("logout", "login");
             EventBridgeForwarder.getInstance().receiveEvent(this.searchString, "SearchEvent");
         } else {
             log.debug("Not logged in to AWS, events will not be sent to AWS EventBridge");

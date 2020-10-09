@@ -137,7 +137,7 @@ public class AmazonUtils {
 
         // Log the UUID to Event Bridge
         // TODO: Check whether the provisioning oauth_config.json has event logging attribute enabled
-        EventBridgeForwarder.getInstance().receiveEvent(openId.identityId(), "login");
+        // EventBridgeForwarder.getInstance().receiveEvent(openId.identityId(), "login");
 
         AssumeRoleWithWebIdentityRequest.Builder webidrequest = AssumeRoleWithWebIdentityRequest.builder().webIdentityToken(openId.token())
                 .roleSessionName(email)

@@ -383,16 +383,16 @@ public class OAuthProvider {
     }
 
     public void logout() {
+        if (AmazonUtils.isLoggedin()) {
+            // TODO: Get Cognito user id and pass it as event payload
+            EventBridgeForwarder.getInstance().receiveEvent("logout", "login");
+        }
+
         accessToken = null;
         refreshToken = null;
         expirationTime = -1;
         currentUserName = null;
         removeRefreshToken();
-
-        if (AmazonUtils.isLoggedin()) {
-            // TODO: Get Cognito user id and pass it as event payload
-            EventBridgeForwarder.getInstance().receiveEvent("logout", "login");
-        }
     }
 
     private void removeRefreshToken() {
