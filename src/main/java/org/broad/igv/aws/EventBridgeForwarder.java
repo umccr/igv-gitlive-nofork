@@ -32,7 +32,11 @@ public class EventBridgeForwarder implements IGVEventObserver {
     };
 
     private void updateCreds() {
-        eventBridgeClient = AmazonUtils.updateClientBuilder(EventBridgeClient.builder()).build();
+        if (AmazonUtils.isLoggedin()) {
+            eventBridgeClient = AmazonUtils.updateClientBuilder(EventBridgeClient.builder()).build();
+        } else {
+            throw new IllegalStateException("Trying to create AWS client without credentials! Have to be logged in.");
+        }
     }
 
     @Override
