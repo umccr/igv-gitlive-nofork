@@ -3,6 +3,7 @@ package org.broad.igv.util;
 import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 import org.broad.igv.Globals;
+import org.broad.igv.aws.EventBridgeForwarder;
 import org.broad.igv.aws.IGVS3Object;
 import org.broad.igv.google.OAuthProvider;
 import org.broad.igv.google.OAuthUtils;
@@ -134,6 +135,9 @@ public class AmazonUtils {
         GetOpenIdTokenRequest.Builder openidrequest = GetOpenIdTokenRequest.builder().logins(logins).identityId(idResult.identityId());
         GetOpenIdTokenResponse openId = cognitoIdentityClient.getOpenIdToken(openidrequest.build());
 
+        // Log the UUID to Event Bridge
+        // TODO: Check whether the provisioning oauth_config.json has event logging attribute enabled
+        EventBridgeForwarder.getInstance().receiveEvent(openId.identityId(), "login");
 
         AssumeRoleWithWebIdentityRequest.Builder webidrequest = AssumeRoleWithWebIdentityRequest.builder().webIdentityToken(openId.token())
                 .roleSessionName(email)

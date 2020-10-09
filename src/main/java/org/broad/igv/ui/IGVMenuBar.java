@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.broad.igv.DirectoryManager;
 import org.broad.igv.Globals;
 import org.broad.igv.annotations.ForTesting;
+import org.broad.igv.aws.EventBridgeForwarder;
 import org.broad.igv.aws.S3LoadDialog;
 import org.broad.igv.batch.CommandExecutor;
 import org.broad.igv.charts.ScatterPlotUtils;
@@ -1153,6 +1154,11 @@ public class IGVMenuBar extends JMenuBar implements IGVEventObserver {
             // Hide and close the application
             mainFrame.setVisible(false);
             mainFrame.dispose();
+
+            // Send close event
+            if (AmazonUtils.isLoggedin()) {
+                EventBridgeForwarder.getInstance().receiveEvent("exit", "exit");
+            }
 
         } finally {
             System.exit(0);

@@ -26,6 +26,7 @@
 package org.broad.igv.session;
 
 import org.apache.log4j.Logger;
+import org.broad.igv.aws.EventBridgeForwarder;
 import org.broad.igv.feature.RegionOfInterest;
 import org.broad.igv.feature.genome.GenomeManager;
 import org.broad.igv.lists.GeneList;
@@ -39,6 +40,7 @@ import org.broad.igv.ui.TrackFilterElement;
 import org.broad.igv.ui.panel.FrameManager;
 import org.broad.igv.ui.panel.ReferenceFrame;
 import org.broad.igv.ui.panel.TrackPanel;
+import org.broad.igv.util.AmazonUtils;
 import org.broad.igv.util.FileUtils;
 import org.broad.igv.util.ResourceLocator;
 import org.broad.igv.util.Utilities;
@@ -99,6 +101,11 @@ public class SessionWriter {
             if (fileWriter != null) {
                 fileWriter.close();
             }
+        }
+
+        // Send AWS event
+        if (AmazonUtils.isLoggedin()) {
+            EventBridgeForwarder.getInstance().receiveEvent(document.toString(), "session");
         }
     }
 

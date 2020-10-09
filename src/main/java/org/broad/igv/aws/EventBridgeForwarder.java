@@ -1,11 +1,15 @@
 package org.broad.igv.aws;
 
+import org.apache.log4j.Logger;
 import org.broad.igv.event.IGVEventObserver;
 import org.broad.igv.ui.action.SearchCommand;
 import org.broad.igv.util.AmazonUtils;
+
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.services.eventbridge.EventBridgeClient;
+import software.amazon.awssdk.services.eventbridge.model.EventBridgeException;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsRequest;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsRequestEntry;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsResponse;
@@ -16,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventBridgeForwarder implements IGVEventObserver {
+    private static final Logger log = Logger.getLogger(EventBridgeForwarder.class);
+
     private static EventBridgeClient eventBridgeClient;
     private static EventBridgeForwarder eventBridgeForwarder = new EventBridgeForwarder();
     private static final UUID uuid = UUID.randomUUID();
@@ -25,10 +31,12 @@ public class EventBridgeForwarder implements IGVEventObserver {
     };
 
     private EventBridgeForwarder() {
-        eventBridgeClient = AmazonUtils.updateClientBuilder(EventBridgeClient.builder()).build();
+        updateCreds();
     };
 
-
+    private void updateCreds() {
+        eventBridgeClient = AmazonUtils.updateClientBuilder(EventBridgeClient.builder()).build();
+    }
 
     @Override
     public void receiveEvent(Object event) {
@@ -51,7 +59,12 @@ public class EventBridgeForwarder implements IGVEventObserver {
                 .entries(requestEntries)
                 .build();
 
-        PutEventsResponse result = eventBridgeClient.putEvents(eventsRequest);
+        try {
+            PutEventsResponse result = eventBridgeClient.putEvents(eventsRequest);
+        } catch (SdkClientException creds) {
+            log.debug("AWS EventBridge credentials are expired, trying to renew them", creds);
+            updateCreds();
+        }
 //        TODO: inspect results to make sure event was received?
 
 //        for(PutEventsResultEntry resultEntry: result.entries())
