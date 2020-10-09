@@ -10,6 +10,7 @@ import software.amazon.awssdk.services.eventbridge.model.PutEventsRequest;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsRequestEntry;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsResponse;
 import software.amazon.awssdk.services.sts.model.Credentials;
+import java.util.UUID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class EventBridgeForwarder implements IGVEventObserver {
     private static EventBridgeClient eventBridgeClient;
     private static EventBridgeForwarder eventBridgeForwarder = new EventBridgeForwarder();
+    private static final UUID uuid = UUID.randomUUID();
 
     public static EventBridgeForwarder getInstance() {
         return eventBridgeForwarder;
@@ -34,7 +36,7 @@ public class EventBridgeForwarder implements IGVEventObserver {
     }
     public void receiveEvent(Object event, String detailType) {
         PutEventsRequestEntry reqEntry = PutEventsRequestEntry.builder()
-                .source("igv-desktop") //
+                .source(uuid) //
                 .detailType(detailType)
                 .eventBusName("igv")
                 .detail("{ \"event\": \""+event+"\" }")
