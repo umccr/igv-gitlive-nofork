@@ -1,6 +1,9 @@
 package org.broad.igv.aws.events;
 
 import org.apache.log4j.Logger;
+import org.broad.igv.event.DataLoadedEvent;
+import org.broad.igv.event.GenomeChangeEvent;
+import org.broad.igv.event.IGVEventBus;
 import org.broad.igv.event.IGVEventObserver;
 import org.broad.igv.util.AmazonUtils;
 import software.amazon.awssdk.core.exception.SdkClientException;
@@ -18,11 +21,12 @@ public class EventBridgeForwarder implements IGVEventObserver {
 
     private static EventBridgeClient eventBridgeClient;
     private static EventBridgeForwarder instance;
-    private static final UUID uuid = UUID.randomUUID();
 
     public static EventBridgeForwarder getInstance() {
         if (instance == null) {
             instance = new EventBridgeForwarder();
+            IGVEventBus.getInstance().subscribe(GenomeChangeEvent.class, instance);
+            IGVEventBus.getInstance().subscribe(DataLoadedEvent.class, instance);
         }
         return instance;
     };
