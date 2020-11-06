@@ -130,11 +130,7 @@ public class SearchCommand {
     }
 
     private void fireAwsEvent() {
-        if (AmazonUtils.isLoggedin()) {
-            EventBridgeForwarder.getInstance().receiveEvent(new SearchEvent(this.searchString));
-        } else {
-            log.debug("Not logged in to AWS, events will not be sent");
-        }
+        EventBridgeForwarder.getInstance().sendEvent(new SearchEvent(this.searchString));
     }
 
     /**

@@ -42,12 +42,16 @@ public class EventBridgeForwarder implements IGVEventObserver {
     @Override
     public void receiveEvent(Object event) {
         // TODO: make sure we are receiving IGV EventBus events
-        receiveEvent(new IgvBusEvent(event));
+        sendEvent(new IgvBusEvent(event));
     }
 
-    public void receiveEvent(Event event) {
+    public void sendEvent(Event event) {
+        if (!AmazonUtils.isLoggedin()) {
+            return;
+        }
+
         PutEventsRequestEntry reqEntry = PutEventsRequestEntry.builder()
-                .source(uuid.toString())
+                .source("igv.desktop")
                 .detailType(event.getDetailType())
                 .eventBusName("igv")
                 .detail(event.getPayload())

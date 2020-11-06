@@ -1157,10 +1157,7 @@ public class IGVMenuBar extends JMenuBar implements IGVEventObserver {
             mainFrame.dispose();
 
             // Send close event
-            if (AmazonUtils.isLoggedin()) {
-                EventBridgeForwarder.getInstance().receiveEvent(ApplicationStateEvent.createExitEvent());
-            }
-
+            EventBridgeForwarder.getInstance().sendEvent(ApplicationStateEvent.createExitEvent());
         } finally {
             System.exit(0);
         }

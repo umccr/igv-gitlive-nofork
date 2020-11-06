@@ -202,9 +202,7 @@ public class IGVSessionReader implements SessionReader {
             igv.resetOverlayTracks();
         }
 
-        if (AmazonUtils.isLoggedin()) {
-            EventBridgeForwarder.getInstance().receiveEvent(SessionEvent.createSessionLoadEvent(nodes.item(0).getTextContent()));
-        }
+        EventBridgeForwarder.getInstance().sendEvent(SessionEvent.createSessionLoadEvent(nodes.item(0).getTextContent()));
     }
 
 

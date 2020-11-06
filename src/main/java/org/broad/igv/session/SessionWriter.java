@@ -105,9 +105,7 @@ public class SessionWriter {
         }
 
         // Send AWS event
-        if (AmazonUtils.isLoggedin()) {
-            EventBridgeForwarder.getInstance().receiveEvent(SessionEvent.createSessionSaveEvent(document));
-        }
+        EventBridgeForwarder.getInstance().sendEvent(SessionEvent.createSessionSaveEvent(document));
     }
 
 

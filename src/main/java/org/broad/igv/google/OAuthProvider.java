@@ -380,11 +380,7 @@ public class OAuthProvider {
     }
 
     public void logout() {
-        if (AmazonUtils.isLoggedin()) {
-            // TODO: Get Cognito user id and pass it as event payload
-//            EventBridgeForwarder.getInstance().receiveEvent("logout", "login");
-            EventBridgeForwarder.getInstance().receiveEvent(ApplicationStateEvent.createLogoffEvent());
-        }
+        EventBridgeForwarder.getInstance().sendEvent(ApplicationStateEvent.createLogoffEvent());
 
         accessToken = null;
         refreshToken = null;
