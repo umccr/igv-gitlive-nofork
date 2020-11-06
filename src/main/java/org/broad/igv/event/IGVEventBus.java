@@ -28,6 +28,7 @@ package org.broad.igv.event;
 
 
 import org.apache.log4j.Logger;
+import org.broad.igv.aws.events.IgvBusEvent;
 
 import java.util.*;
 

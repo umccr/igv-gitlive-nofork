@@ -3,7 +3,6 @@ package org.broad.igv.util;
 import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 import org.broad.igv.Globals;
-import org.broad.igv.aws.EventBridgeForwarder;
 import org.broad.igv.aws.IGVS3Object;
 import org.broad.igv.google.OAuthProvider;
 import org.broad.igv.google.OAuthUtils;

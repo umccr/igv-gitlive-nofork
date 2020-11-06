@@ -32,7 +32,8 @@ import htsjdk.tribble.Feature;
 import org.apache.log4j.Logger;
 import org.broad.igv.Globals;
 import org.broad.igv.annotations.ForTesting;
-import org.broad.igv.aws.EventBridgeForwarder;
+import org.broad.igv.aws.events.EventBridgeForwarder;
+import org.broad.igv.aws.events.SearchEvent;
 import org.broad.igv.feature.*;
 import org.broad.igv.feature.genome.Genome;
 import org.broad.igv.feature.genome.GenomeManager;
@@ -50,7 +51,6 @@ import org.broad.igv.util.HttpUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.*;
@@ -131,9 +131,9 @@ public class SearchCommand {
 
     private void fireAwsEvent() {
         if (AmazonUtils.isLoggedin()) {
-            EventBridgeForwarder.getInstance().receiveEvent(this.searchString, "SearchEvent");
+            EventBridgeForwarder.getInstance().receiveEvent(new SearchEvent(this.searchString));
         } else {
-            log.debug("Not logged in to AWS, events will not be sent to AWS EventBridge");
+            log.debug("Not logged in to AWS, events will not be sent");
         }
     }
 

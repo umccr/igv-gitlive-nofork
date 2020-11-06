@@ -27,7 +27,8 @@ package org.broad.igv.session;
 
 import org.apache.log4j.Logger;
 import org.broad.igv.Globals;
-import org.broad.igv.aws.EventBridgeForwarder;
+import org.broad.igv.aws.events.EventBridgeForwarder;
+import org.broad.igv.aws.events.SessionEvent;
 import org.broad.igv.bedpe.InteractionTrack;
 import org.broad.igv.data.CombinedDataSource;
 import org.broad.igv.feature.Locus;
@@ -202,7 +203,7 @@ public class IGVSessionReader implements SessionReader {
         }
 
         if (AmazonUtils.isLoggedin()) {
-            EventBridgeForwarder.getInstance().receiveEvent(nodes.item(0).getTextContent(), "session");
+            EventBridgeForwarder.getInstance().receiveEvent(SessionEvent.createSessionLoadEvent(nodes.item(0).getTextContent()));
         }
     }
 

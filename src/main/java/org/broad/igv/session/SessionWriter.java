@@ -26,7 +26,8 @@
 package org.broad.igv.session;
 
 import org.apache.log4j.Logger;
-import org.broad.igv.aws.EventBridgeForwarder;
+import org.broad.igv.aws.events.EventBridgeForwarder;
+import org.broad.igv.aws.events.SessionEvent;
 import org.broad.igv.feature.RegionOfInterest;
 import org.broad.igv.feature.genome.GenomeManager;
 import org.broad.igv.lists.GeneList;
@@ -105,7 +106,7 @@ public class SessionWriter {
 
         // Send AWS event
         if (AmazonUtils.isLoggedin()) {
-            EventBridgeForwarder.getInstance().receiveEvent(document.toString(), "session");
+            EventBridgeForwarder.getInstance().receiveEvent(SessionEvent.createSessionSaveEvent(document));
         }
     }
 

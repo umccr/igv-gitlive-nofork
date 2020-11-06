@@ -1,4 +1,4 @@
-package org.broad.igv.aws;
+package org.broad.igv.aws.events;
 
 import org.apache.log4j.Logger;
 import org.broad.igv.event.IGVEventObserver;
@@ -41,15 +41,16 @@ public class EventBridgeForwarder implements IGVEventObserver {
 
     @Override
     public void receiveEvent(Object event) {
-        receiveEvent(event, "DefaultType");
+        // TODO: make sure we are receiving IGV EventBus events
+        receiveEvent(new IgvBusEvent(event));
     }
 
-    public void receiveEvent(Object event, String detailType) {
+    public void receiveEvent(Event event) {
         PutEventsRequestEntry reqEntry = PutEventsRequestEntry.builder()
                 .source(uuid.toString())
-                .detailType(detailType)
+                .detailType(event.getDetailType())
                 .eventBusName("igv")
-                .detail("{ \"event\": \""+event+"\" }")
+                .detail(event.getPayload())
                 .resources()
                 .build();
 
@@ -67,15 +68,6 @@ public class EventBridgeForwarder implements IGVEventObserver {
             log.debug("AWS EventBridge credentials are expired, trying to renew them", creds);
             updateCreds();
         }
-//        TODO: inspect results to make sure event was received?
 
-//        for(PutEventsResultEntry resultEntry: result.entries())
-//        {
-//            if (resultEntry.eventId() != null) {
-//                System.out.println("Event Id: " + resultEntry.eventId());
-//            } else {
-//                System.out.println("PutEvents failed with Error Code: " + resultEntry.errorCode());
-//            }
-//        }
     }
 }

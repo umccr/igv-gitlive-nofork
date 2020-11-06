@@ -5,7 +5,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import org.apache.log4j.Logger;
 import org.broad.igv.Globals;
-import org.broad.igv.aws.EventBridgeForwarder;
+import org.broad.igv.aws.events.ApplicationStateEvent;
+import org.broad.igv.aws.events.EventBridgeForwarder;
 import org.broad.igv.batch.CommandListener;
 import org.broad.igv.event.IGVEventBus;
 import org.broad.igv.prefs.PreferencesManager;
@@ -13,12 +14,8 @@ import org.broad.igv.ui.util.MessageUtils;
 import org.broad.igv.util.AmazonUtils;
 import org.broad.igv.util.HttpUtils;
 import org.broad.igv.util.JWTParser;
-import software.amazon.awssdk.services.sts.model.Credentials;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -385,7 +382,8 @@ public class OAuthProvider {
     public void logout() {
         if (AmazonUtils.isLoggedin()) {
             // TODO: Get Cognito user id and pass it as event payload
-            EventBridgeForwarder.getInstance().receiveEvent("logout", "login");
+//            EventBridgeForwarder.getInstance().receiveEvent("logout", "login");
+            EventBridgeForwarder.getInstance().receiveEvent(ApplicationStateEvent.createLogoffEvent());
         }
 
         accessToken = null;
